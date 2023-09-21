@@ -23,7 +23,7 @@ class UserController extends HomeController
             $user = $users->getData();
             return view('users.indexuser', compact('user'));
         } else {
-            $users->getData();
+            $users = $users->getData();
             return view('users.index', compact('users'));
         }
     }
@@ -54,7 +54,6 @@ class UserController extends HomeController
     {
         $userDAO = new UserDAO();
         $userDAO->update($request, $id);
-
         // Muestra una alerta de éxito y redirige de regreso.
         Alert::success('¡Éxito!', 'Usuario actualizado correctamente');
         return redirect()->back();
