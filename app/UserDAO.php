@@ -85,7 +85,7 @@ class UserDAO
             $user = User::findOrFail($id);
             $user->name = $request->name;
             $user->email = $request->email;
-            if (isset($request->role)) {
+            if (!isset($request->role)) {
                 $user->role = 'Usuario';
             }
             

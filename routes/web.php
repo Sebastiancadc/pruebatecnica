@@ -22,13 +22,10 @@ Route::get('/', function () {
 
 Route::post('login', [HomeController::class, 'login'])->name('login');
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/users', [UserController::class, 'index'])->name('users');
-Route::post('/create', [UserController::class, 'create'])->name('create');
-Route::post('/delete/{id}', [UserController::class, 'delete'])->name('delete');
-Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
-
-
-
-
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::post('/create', [UserController::class, 'create'])->name('create');
+    Route::post('/delete/{id}', [UserController::class, 'delete'])->name('delete');
+    Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
+});

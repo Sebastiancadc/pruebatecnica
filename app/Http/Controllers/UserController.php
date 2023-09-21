@@ -8,11 +8,18 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends HomeController
 {
-    function index()
+    private $userDAO;
+
+    public function __construct(UserDAO $userDAO)
     {
-        $userDAO = new UserDAO();
-        $users = $userDAO->usersAll();
-        if (auth()->user()->role == 'Usuario') {
+        $this->userDAO = $userDAO;
+    }
+
+    public function index()
+    {
+        $users = $this->userDAO->usersAll();
+        
+        if (auth()->user()->role === 'Usuario') {
             $user = $users->getData();
             return view('users.indexuser', compact('user'));
         } else {
@@ -21,27 +28,24 @@ class UserController extends HomeController
         }
     }
 
-    function create(Request $request)
+    public function create(Request $request)
     {
-        $userDAO = new UserDAO();
-        $users = $userDAO->store($request);
+        $this->userDAO->store($request);
         Alert::success('¡Éxito!', 'Usuario creado correctamente.');
         return redirect()->back();
     }
 
     public function update(Request $request, $id)
     {
-        $userDAO = new UserDAO();
-        $users = $userDAO->update($request, $id);
+        $this->userDAO->update($request, $id);
         Alert::success('¡Éxito!', 'Usuario actualizado correctamente');
         return redirect()->back();
     }
 
-    function delete($id)
+    public function delete($id)
     {
-        $userDAO = new UserDAO();
-        $users = $userDAO->destroy($id);
-        Alert::success('¡Exito!', 'Usuario ' . $users->name . ' eliminado correctamente');
+        $this->userDAO->destroy($id);
+        Alert::success('¡Éxito!', 'Usuario eliminado correctamente');
         return redirect()->back();
     }
 }
