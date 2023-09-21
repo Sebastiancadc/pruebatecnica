@@ -8,44 +8,70 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends HomeController
 {
-    private $userDAO;
-
-    public function __construct(UserDAO $userDAO)
+    /**
+     * Muestra una lista de usuarios según el rol del usuario autenticado.
+     *
+     * @return \Illuminate\View\View
+     */
+    function index()
     {
-        $this->userDAO = $userDAO;
-    }
+        $userDAO = new UserDAO();
+        $users = $userDAO->usersAll();
 
-    public function index()
-    {
-        $users = $this->userDAO->usersAll();
-        
-        if (auth()->user()->role === 'Usuario') {
+        // Verifica el rol del usuario autenticado para determinar la vista apropiada.
+        if (auth()->user()->role == 'Usuario') {
             $user = $users->getData();
             return view('users.indexuser', compact('user'));
         } else {
-            $users = $users->getData();
+            $users->getData();
             return view('users.index', compact('users'));
         }
     }
 
-    public function create(Request $request)
+    /**
+     * Crea un nuevo usuario.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    function create(Request $request)
     {
-        $this->userDAO->store($request);
+        $userDAO = new UserDAO();
+        $userDAO->store($request);
+        // Muestra una alerta de éxito y redirige de regreso.
         Alert::success('¡Éxito!', 'Usuario creado correctamente.');
         return redirect()->back();
     }
 
+    /**
+     * Actualiza un usuario existente.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, $id)
     {
-        $this->userDAO->update($request, $id);
+        $userDAO = new UserDAO();
+        $userDAO->update($request, $id);
+
+        // Muestra una alerta de éxito y redirige de regreso.
         Alert::success('¡Éxito!', 'Usuario actualizado correctamente');
         return redirect()->back();
     }
 
-    public function delete($id)
+    /**
+     * Elimina un usuario.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    function delete($id)
     {
-        $this->userDAO->destroy($id);
-        Alert::success('¡Éxito!', 'Usuario eliminado correctamente');
+        $userDAO = new UserDAO();
+        $userDAO->destroy($id);
+        // Muestra una alerta de éxito y redirige de regreso.
+        Alert::success('¡Exito!', 'Usuario eliminado correctamente');
         return redirect()->back();
     }
 }

@@ -12,7 +12,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 class UserDAO
 {
     /**
-     * Show the application dashboard.
+     * Muestra el panel de inicio de la aplicación.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -22,29 +22,25 @@ class UserDAO
     }
 
     /**
-     * The function retrieves all users from the database and returns a view with the users data.
-     * 
-     * @return a view called 'users.index' and passing the 'users' variable to the view.
+     * Obtiene todos los usuarios o un usuario específico según el rol del usuario autenticado.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function usersAll()
     {
         if (auth()->user()->role == 'Usuario') {
             $users = User::findOrFail(auth()->user()->id);
         } else {
-            $users = User::All();
+            $users = User::all();
         }
         return response()->json($users);
     }
 
     /**
-     * The above function creates a new user in the database with the provided name, email, password, and
-     * client ID, and then redirects to the user index page.
-     * 
-     * @param Request request The  parameter is an instance of the Request class, which represents
-     * an HTTP request made to the application. It contains all the data sent with the request, such as
-     * form inputs, query parameters, and uploaded files.
-     * 
-     * @return a redirect to the 'user.index' route.
+     * Crea un nuevo usuario a partir de los datos proporcionados en la solicitud.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -66,16 +62,11 @@ class UserDAO
     }
 
     /**
-     * The above function updates a user's information in a PHP application, including their name, email,
-     * password, and client ID, and assigns them a new role if specified.
-     * 
-     * @param Request request The  parameter is an instance of the Request class, which contains
-     * all the data that was sent with the HTTP request. It is used to retrieve the values of the form
-     * fields that were submitted.
-     * @param id The  parameter is the unique identifier of the user that needs to be updated. It is
-     * used to find the user record in the database and update its information.
-     * 
-     * @return a redirect to the 'user.index' route.
+     * Actualiza un usuario existente con los datos proporcionados en la solicitud.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -103,12 +94,10 @@ class UserDAO
     }
 
     /**
-     * The function destroys a user record in the database and redirects to the user index page,
-     * displaying a success message.
-     * 
-     * @param id The id parameter represents the unique identifier of the user that needs to be deleted.
-     * 
-     * @return a redirect to the 'user.index' route.
+     * Elimina un usuario por su ID.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
